@@ -201,7 +201,7 @@ if [ "$originalArgOne" = 'mongod' ]; then
 		# if we've got any /docker-entrypoint-initdb.d/* files to parse later, we should initdb
 		for f in /docker-entrypoint-initdb.d/*; do
 			case "$f" in
-				*.js) # this should match the set of files we check for below
+				*.sh|*.js) # this should match the set of files we check for below
 					shouldPerformInitdb="$f"
 					break
 					;;
@@ -305,6 +305,7 @@ if [ "$originalArgOne" = 'mongod' ]; then
 		echo
 		for f in /docker-entrypoint-initdb.d/*; do
 			case "$f" in
+			        *.sh) echo "$0: running $f"; . "$f" ;;
 				*.js) echo "$0: running $f"; "${mongo[@]}" "$MONGO_INITDB_DATABASE" "$f"; echo ;;
 				*)    echo "$0: ignoring $f" ;;
 			esac
